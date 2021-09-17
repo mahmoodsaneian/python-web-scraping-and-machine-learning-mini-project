@@ -16,7 +16,7 @@ cursor = cnx.cursor()
 # cursor.execute("CREATE TABLE car (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50), functionality VARCHAR(50), city VARCHAR(250), price VARCHAR(250), accident VARCHAR(250), year INT)")
 
 c = 1
-while c < 21 :
+while c < 5 :
     # connect to the website
     url  = "https://www.truecar.com/used-cars-for-sale/listings/"+car_name+"/?page="+str(c)
     res  = requests.get(url)
@@ -30,6 +30,8 @@ while c < 21 :
     functionalities = soup.find_all('div', class_ = 'd-flex w-100 justify-content-between')
     # find names of cars
     names = soup.find_all('span', class_ = 'vehicle-header-make-model text-truncate')
+    # find cities of cars
+    cities = soup.find_all('div', class_ = 'vehicle-card-location font-size-1 margin-top-1')
+    # find status of accident
+    accidents = soup.find_all('div', class_ = 'vehicle-card-location font-size-1 margin-top-1')
     c += 1
-    # for i in range(0, len(names)) :
-    #     print(names[i].text, years[i].text, prices[i].text, functionalities[i].text)
