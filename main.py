@@ -19,12 +19,17 @@ c = 1
 while c < 21 :
     # connect to the website
     url  = "https://www.truecar.com/used-cars-for-sale/listings/"+car_name+"/?page="+str(c)
-    res  = requests.get(res)
+    res  = requests.get(url)
     soup = BeautifulSoup(res.text, 'html5lib')
 
     # find product years of cars
     years = soup.find_all('span', class_ = 'vehicle-card-year font-size-1')
     # find prices of cars
     prices = soup.find_all('div', class_ = 'heading-3 margin-y-1 font-weight-bold')
-    
+    # find functionalities of cars
+    functionalities = soup.find_all('div', class_ = 'd-flex w-100 justify-content-between')
+    # find names of cars
+    names = soup.find_all('span', class_ = 'vehicle-header-make-model text-truncate')
     c += 1
+    # for i in range(0, len(names)) :
+    #     print(names[i].text, years[i].text, prices[i].text, functionalities[i].text)
