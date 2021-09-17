@@ -1,10 +1,10 @@
-import bs4
+from bs4 import BeautifulSoup
 import requests
 import mysql.connector
 
 # get car's name
 car_name = input("please enter name of car that you want to know it's characteristics?\n")
-
+car_name = car_name.lower()
 # connect to the database
 cnx = mysql.connector.connect(user = 'root', password = '', host = '127.0.0.1', database = 'python_project')
 cursor = cnx.cursor()
@@ -14,3 +14,17 @@ cursor = cnx.cursor()
 
 # # create table for first time
 # cursor.execute("CREATE TABLE car (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50), functionality VARCHAR(50), city VARCHAR(250), price VARCHAR(250), accident VARCHAR(250), year INT)")
+
+c = 1
+while c < 21 :
+    # connect to the website
+    url  = "https://www.truecar.com/used-cars-for-sale/listings/"+car_name+"/?page="+str(c)
+    res  = requests.get(res)
+    soup = BeautifulSoup(res.text, 'html5lib')
+
+    # find product years of cars
+    years = soup.find_all('span', class_ = 'vehicle-card-year font-size-1')
+    # find prices of cars
+    prices = soup.find_all('div', class_ = 'heading-3 margin-y-1 font-weight-bold')
+    
+    c += 1
