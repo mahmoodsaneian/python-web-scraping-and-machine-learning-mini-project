@@ -16,7 +16,7 @@ cursor = cnx.cursor()
 # cursor.execute("CREATE TABLE car (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50), functionality VARCHAR(50), city VARCHAR(250), price VARCHAR(250), accident VARCHAR(250), year INT)")
 
 c = 1
-while c < 5 :
+while c < 21 :
     # connect to the website
     url  = "https://www.truecar.com/used-cars-for-sale/listings/"+car_name+"/?page="+str(c)
     res  = requests.get(url)
@@ -31,7 +31,20 @@ while c < 5 :
     # find names of cars
     names = soup.find_all('span', class_ = 'vehicle-header-make-model text-truncate')
     # find cities of cars
-    cities = soup.find_all('div', class_ = 'vehicle-card-location font-size-1 margin-top-1')
+    cities = soup.find_all('div', class_ = 'vehicle-card-location font-size-1 margin-top-1', attrs= {'data-test' : 'vehicleCardLocation'})
     # find status of accident
-    accidents = soup.find_all('div', class_ = 'vehicle-card-location font-size-1 margin-top-1')
+    accidents = soup.find_all('div', class_ = 'vehicle-card-location font-size-1 margin-top-1', attrs= {'data-test' : 'vehicleCardCondition'})
+
+    # write into database
+    sql = 'INSERT INTO car (name, functionality, city, price, accident, year) VALUES (%s, %s, %s, %s, %s, %s)'
+    for i in range(0, len(names)) :
+        tmp = ""
+        if 'No' in accidents[i].text :
+            tmp = 'NO'
+        else:
+            tmp = 'YES'
+        val = (names[i].text, functionalities[i].text, cities[i].text, prices[i].text, tmp, years[i].text)
+        cursor.execute(sql, val)
+        cnx.commit()
+
     c += 1
